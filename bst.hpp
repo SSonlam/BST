@@ -266,35 +266,73 @@ public:
         }
         return true;
     }
+    Node* minValueNode(Node* Ptr)
+    {
+        Node* Current = Ptr;
 
-    // remove item, return true if successful
-    bool remove(const T &Item) {
-        if (contains(Item)) {
-            removeNode(Item);
-            return true;
-        }
-            return false;
+        /* loop down to find the leftmost leaf */
+        while (Current && Current->Left != nullptr)
+            Current = Current->Left;
+
+        return Current;
     }
-    void removeNode(const T &Item) {
-        auto Current = new Node();
-        Current = Root;
-        while (Current != nullptr) {
-            if (Item.compare(Current->Data) < 0) {
-                Current = Current->Left;
-            }
-            else if (Item.compare(Current->Data) > 0) {
-                Current = Current->Right;
-            }
-            else if (Current->Data.compare(Item) == 0) {
-                if (Current->Left == nullptr && Current->Right == nullptr) {
-                    auto tempPtr = new Node();
-                    tempPtr = Current;
-                    delete Current;
-                    Current = nullptr;
-                }
-            }
-        }
+    /* Given a binary search tree and a key, this function deletes the key
+   and returns the new root */
+    bool remove(T deleteData) {
+        deleteNode(Root, deleteData);
+        return true;
     }
+
+    Node* deleteNode(Node* Current, T Target)
+    {
+        // base case 
+        if (Current == nullptr) return Current;
+
+        // If the key to be deleted is smaller than the root's key, 
+        // then it lies in left subtree 
+        if (Target.compare(Current->Data) < 0)
+            Current->Left = deleteNode(Current->Left, Target);
+
+        // If the key to be deleted is greater than the root's key, 
+        // then it lies in right subtree 
+        else if (Target.compare(Current->Data) > 0)
+            Current->Right = deleteNode(Current->Right, Target);
+
+        // if key is same as root's key, then This is the node 
+        // to be deleted 
+        else
+        {
+            // node with only one child or no child 
+            if (Current->Left == nullptr)
+            {
+                Node *Temp = Current->Right;
+                delete Current;
+                return Temp;
+            }
+            else if (Current->Right == nullptr)
+            {
+                Node *Temp = Current->Left;
+                delete Current;
+                return Temp;
+            }
+
+            // node with two children: Get the inorder successor (smallest 
+            // in the right subtree) 
+            Node* Temp = minValueNode(Current->Right);
+
+            // Copy the inorder successor's content to this node 
+            Current->Data = Temp->Data;
+
+            // Delete the inorder successor 
+            Current->Right = deleteNode(Current->Right, Temp->Data);
+        }
+        return Current;
+    }
+
+
+
+
+
 
     // true if item is in BST
     bool contains(const T &Item) const {

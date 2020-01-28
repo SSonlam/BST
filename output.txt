@@ -1,8 +1,8 @@
 ===================================================================
 Recommended Usage: ./simplecompile.sh > output.txt 2>&1
 ===================================================================
-Mon Jan 27 23:05:17 PST 2020
-Linux uw1-320-02 4.9.0-9-amd64 #1 SMP Debian 4.9.168-1+deb9u5 (2019-08-11) x86_64 GNU/Linux
+Mon Jan 27 23:42:07 PST 2020
+Linux uw1-320-00 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64 GNU/Linux
 uid=863755(ssonlam) gid=2120863755(ssonlam) groups=2120863755(ssonlam),605559(lab-access)
 ===================================================================
 *** compiling with clang++ to create an executable called myprogram
@@ -34,6 +34,12 @@ Visual check B1:
         a
 
 
+            x
+        f
+    c
+        a
+
+
 Ending testPisan03
 Starting testSample01
 Ending testSample01
@@ -47,8 +53,8 @@ LLVM (http://llvm.org/):
   Built Jun  2 2017 (13:11:29).
   Default target: x86_64-pc-linux-gnu
   Host CPU: ivybridge
-18388 warnings generated.
-28738 warnings generated.
+18391 warnings generated.
+28741 warnings generated.
 /home/NETID/ssonlam/bst.hpp:50:38: warning: parameter 'N' is unused [misc-unused-parameters]
     static int getHeight(const Node *N) {
                                      ^
@@ -60,14 +66,17 @@ LLVM (http://llvm.org/):
 /home/NETID/ssonlam/bst.hpp:188:20: warning: redundant boolean literal in conditional return statement [readability-simplify-boolean-expr]
             return true;
                    ^
-/home/NETID/ssonlam/bst.hpp:290:26: warning: invalid case style for variable 'tempPtr' [readability-identifier-naming]
-                    auto tempPtr = new Node();
-                         ^
-/home/NETID/ssonlam/bst.hpp:304:9: warning: use auto when initializing with new to avoid duplicating the type name [modernize-use-auto]
+/home/NETID/ssonlam/bst.hpp:281:19: warning: invalid case style for parameter 'deleteData' [readability-identifier-naming]
+    bool remove(T deleteData) {
+                  ^
+/home/NETID/ssonlam/bst.hpp:312:13: warning: don't use else after return [readability-else-after-return]
+            else if (Current->Right == nullptr)
+            ^
+/home/NETID/ssonlam/bst.hpp:342:9: warning: use auto when initializing with new to avoid duplicating the type name [modernize-use-auto]
         Node* Current = new Node();
         ^
         auto 
-/home/NETID/ssonlam/bst.hpp:489:13: warning: don't use else after return [readability-else-after-return]
+/home/NETID/ssonlam/bst.hpp:527:13: warning: don't use else after return [readability-else-after-return]
             else {
             ^
 /home/NETID/ssonlam/bsttest.cpp:42:25: warning: construction of 'SS' with static storage duration may throw an exception that cannot be caught [cert-err58-cpp]
@@ -88,7 +97,7 @@ Use -header-filter=.* to display errors from all non-system headers.
 *** ERROR clang-format is not available on this system
 ===================================================================
 *** running valgrind to detect memory leaks
-==14043==     in use at exit: 0 bytes in 0 blocks
+==10578==     in use at exit: 0 bytes in 0 blocks
 ===================================================================
 *** compiling with clang++ to checking for memory leaks
 ===================================================================
@@ -109,6 +118,12 @@ Visual check B1:
         a
 
 
+            x
+        f
+    c
+        a
+
+
 Ending testPisan03
 Starting testSample01
 Ending testSample01
@@ -118,6 +133,6 @@ Done!
 ===================================================================
 *** cleaning up, deleting myprogram
 ===================================================================
-Mon Jan 27 23:05:26 PST 2020
+Mon Jan 27 23:42:16 PST 2020
 ===================================================================
 Exiting with 0
