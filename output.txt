@@ -1,7 +1,7 @@
 ===================================================================
 Recommended Usage: ./simplecompile.sh > output.txt 2>&1
 ===================================================================
-Mon Jan 27 22:54:46 PST 2020
+Mon Jan 27 23:05:17 PST 2020
 Linux uw1-320-02 4.9.0-9-amd64 #1 SMP Debian 4.9.168-1+deb9u5 (2019-08-11) x86_64 GNU/Linux
 uid=863755(ssonlam) gid=2120863755(ssonlam) groups=2120863755(ssonlam),605559(lab-access)
 ===================================================================
@@ -15,13 +15,7 @@ In file included from ./bsttest.cpp:19:
 ./bst.hpp:50:38: warning: unused parameter 'N' [-Wunused-parameter]
     static int getHeight(const Node *N) {
                                      ^
-./bst.hpp:267:5: warning: control may reach end of non-void function [-Wreturn-type]
-    }
-    ^
-./bsttest.cpp:82:8: note: in instantiation of member function 'BST<std::__cxx11::basic_string<char> >::add' requested here
-    B1.add("c");
-       ^
-2 warnings generated.
+1 warning generated.
 ===================================================================
 *** running myprogram
 Starting testPisan01
@@ -29,8 +23,21 @@ Starting testPisan01
 Ending testPisan01
 Starting testPisan02
 * Testing == and != with more detail
-./simplecompile.sh: line 79: 13826 Illegal instruction     ./myprogram
----> Last command executed failed with exitcode code: 132
+Ending testPisan02
+Starting testPisan03
+* Testing traversal
+Visual check B1:
+                x
+            g
+        f
+    c
+        a
+
+
+Ending testPisan03
+Starting testSample01
+Ending testSample01
+Done!
 ===================================================================
 *** running clang-tidy using options from .clang-tidy
 LLVM (http://llvm.org/):
@@ -40,8 +47,8 @@ LLVM (http://llvm.org/):
   Built Jun  2 2017 (13:11:29).
   Default target: x86_64-pc-linux-gnu
   Host CPU: ivybridge
-18853 warnings generated.
-29203 warnings generated.
+18388 warnings generated.
+28738 warnings generated.
 /home/NETID/ssonlam/bst.hpp:50:38: warning: parameter 'N' is unused [misc-unused-parameters]
     static int getHeight(const Node *N) {
                                      ^
@@ -53,74 +60,14 @@ LLVM (http://llvm.org/):
 /home/NETID/ssonlam/bst.hpp:188:20: warning: redundant boolean literal in conditional return statement [readability-simplify-boolean-expr]
             return true;
                    ^
-/home/NETID/ssonlam/bst.hpp:267:5: warning: control may reach end of non-void function [clang-diagnostic-return-type]
-    }
-    ^
-/home/NETID/ssonlam/bsttest.cpp:82:8: note: in instantiation of member function 'BST<std::__cxx11::basic_string<char> >::add' requested here
-    B1.add("c");
-       ^
-/home/NETID/ssonlam/bst.hpp:289:26: warning: invalid case style for variable 'tempPtr' [readability-identifier-naming]
+/home/NETID/ssonlam/bst.hpp:290:26: warning: invalid case style for variable 'tempPtr' [readability-identifier-naming]
                     auto tempPtr = new Node();
                          ^
-/home/NETID/ssonlam/bst.hpp:303:9: warning: use auto when initializing with new to avoid duplicating the type name [modernize-use-auto]
+/home/NETID/ssonlam/bst.hpp:304:9: warning: use auto when initializing with new to avoid duplicating the type name [modernize-use-auto]
         Node* Current = new Node();
         ^
         auto 
-/home/NETID/ssonlam/bst.hpp:372:14: warning: Potential leak of memory pointed to by 'Nodes' [clang-analyzer-cplusplus.NewDeleteLeaks]
-        Root = rebalanceHelper(Nodes, 0, N - 1);
-             ^
-/home/NETID/ssonlam/bsttest.cpp:184:5: note: Calling 'testSample01'
-    testSample01();
-    ^
-/home/NETID/ssonlam/bsttest.cpp:174:5: note: Calling 'BST::rebalance'
-    B1.rebalance();
-    ^
-/home/NETID/ssonlam/bst.hpp:364:13: note: Left side of '||' is false
-        if (Root == nullptr || (Root->Left == nullptr && Root->Right == nullptr)) {
-            ^
-/home/NETID/ssonlam/bst.hpp:364:55: note: Left side of '&&' is false
-        if (Root == nullptr || (Root->Left == nullptr && Root->Right == nullptr)) {
-                                                      ^
-/home/NETID/ssonlam/bst.hpp:368:9: note: Calling 'BST::storeBSTNodes'
-        storeBSTNodes(Nodes);
-        ^
-/home/NETID/ssonlam/bst.hpp:390:17: note: Memory is allocated
-        Nodes = new T[numberOfNodes()];
-                ^
-/home/NETID/ssonlam/bst.hpp:394:16: note: Left side of '||' is false
-        while (Current != nullptr || TempStack.empty() == false)
-               ^
-/home/NETID/ssonlam/bst.hpp:394:9: note: Loop condition is false. Execution continues on line 394
-        while (Current != nullptr || TempStack.empty() == false)
-        ^
-/home/NETID/ssonlam/bst.hpp:368:9: note: Returned allocated memory via 1st parameter
-        storeBSTNodes(Nodes);
-        ^
-/home/NETID/ssonlam/bst.hpp:372:14: note: Potential leak of memory pointed to by 'Nodes'
-        Root = rebalanceHelper(Nodes, 0, N - 1);
-             ^
-/home/NETID/ssonlam/bst.hpp:373:5: warning: Potential memory leak [clang-analyzer-cplusplus.NewDeleteLeaks]
-    }
-    ^
-/home/NETID/ssonlam/bsttest.cpp:184:5: note: Calling 'testSample01'
-    testSample01();
-    ^
-/home/NETID/ssonlam/bsttest.cpp:174:5: note: Calling 'BST::rebalance'
-    B1.rebalance();
-    ^
-/home/NETID/ssonlam/bst.hpp:364:13: note: Left side of '||' is false
-        if (Root == nullptr || (Root->Left == nullptr && Root->Right == nullptr)) {
-            ^
-/home/NETID/ssonlam/bst.hpp:364:55: note: Left side of '&&' is false
-        if (Root == nullptr || (Root->Left == nullptr && Root->Right == nullptr)) {
-                                                      ^
-/home/NETID/ssonlam/bst.hpp:371:16: note: Memory is allocated
-        Root = new Node();
-               ^
-/home/NETID/ssonlam/bst.hpp:373:5: note: Potential memory leak
-    }
-    ^
-/home/NETID/ssonlam/bst.hpp:488:13: warning: don't use else after return [readability-else-after-return]
+/home/NETID/ssonlam/bst.hpp:489:13: warning: don't use else after return [readability-else-after-return]
             else {
             ^
 /home/NETID/ssonlam/bsttest.cpp:42:25: warning: construction of 'SS' with static storage duration may throw an exception that cannot be caught [cert-err58-cpp]
@@ -135,25 +82,15 @@ stringstream TreeVisitor::SS;
 /usr/lib/gcc/x86_64-linux-gnu/6.3.0/../../../../include/c++/6.3.0/sstream:690:7: note: possibly throwing constructor declared here
       basic_stringstream(ios_base::openmode __m = ios_base::out | ios_base::in)
       ^
-Suppressed 29189 warnings (29189 in non-user code).
+Suppressed 28727 warnings (28727 in non-user code).
 Use -header-filter=.* to display errors from all non-system headers.
 ===================================================================
 *** ERROR clang-format is not available on this system
 ===================================================================
 *** running valgrind to detect memory leaks
-./simplecompile.sh: line 134: 13829 Illegal instruction     valgrind --leak-check=full ./myprogram > myprogram-valgrind-output.txt 2>&1
----> grep from valgrind did not find expected string: in use at exit: 0 bytes in 0 blocks
----> might have memory leak, setting exitcode to 111
+==14043==     in use at exit: 0 bytes in 0 blocks
 ===================================================================
 *** compiling with clang++ to checking for memory leaks
-In file included from ./bsttest.cpp:19:
-./bst.hpp:267:5: warning: control may reach end of non-void function [-Wreturn-type]
-    }
-    ^
-./bsttest.cpp:82:8: note: in instantiation of member function 'BST<std::__cxx11::basic_string<char> >::add' requested here
-    B1.add("c");
-       ^
-1 warning generated.
 ===================================================================
 *** running myprogram with memory checking
 Starting testPisan01
@@ -161,22 +98,26 @@ Starting testPisan01
 Ending testPisan01
 Starting testPisan02
 * Testing == and != with more detail
-./simplecompile.sh: line 148: 13839 Illegal instruction     ASAN_OPTIONS=detect_leaks=1 ./myprogram
----> Last command executed failed with exitcode code: 132
+Ending testPisan02
+Starting testPisan03
+* Testing traversal
+Visual check B1:
+                x
+            g
+        f
+    c
+        a
+
+
+Ending testPisan03
+Starting testSample01
+Ending testSample01
+Done!
 ===================================================================
 *** using --analyze option for clang++ to detect issues
-In file included from ./bsttest.cpp:19:
-./bst.hpp:372:14: warning: Potential leak of memory pointed to by 'Nodes'
-        Root = rebalanceHelper(Nodes, 0, N - 1);
-        ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./bst.hpp:373:5: warning: Potential memory leak
-    }
-    ^
-2 warnings generated.
----> grep found a warning message, setting exitcode to 1
 ===================================================================
 *** cleaning up, deleting myprogram
 ===================================================================
-Mon Jan 27 22:54:56 PST 2020
+Mon Jan 27 23:05:26 PST 2020
 ===================================================================
-Exiting with 1
+Exiting with 0

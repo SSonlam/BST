@@ -264,6 +264,7 @@ public:
                 Current = Current->Right;
             }
         }
+        return true;
     }
 
     // remove item, return true if successful
