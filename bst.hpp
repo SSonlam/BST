@@ -17,8 +17,8 @@
 #include <iostream>
 #include <queue>
 #include <sstream>
+#include <stack>
 #include <string>
-#include <vector>
 
 using namespace std;
 
@@ -166,7 +166,10 @@ public:
     // Assignment specification
     // NOLINTNEXTLINE
     BST(const T Arr[], int N) {
-
+        Root = new Node();
+        for (int I = 0; I < N; I++) {
+            add(Arr[I]);
+        }
     }
 
     // copy constructor
@@ -194,26 +197,22 @@ public:
         if (Root == nullptr) {//base case if the path hits a NULL (stem)
             return 0;
         }
-        else if (Root->Left == nullptr && Root->Right == nullptr) {
+        if (Root->Left == nullptr && Root->Right == nullptr) {
             return 1;
         }
-        else {
-            return getHeightHelper(Root);
-        }
+        return getHeightHelper(Root);
     }
 
     int getHeightHelper(const Node* Top) const {
         if (Top == nullptr) {
             return 0;
         }
-        int leftDepth = getHeightHelper(Top->Left);//finding the deepest node on the left side of the node
-        int rightDepth = getHeightHelper(Top->Right);//finding the deepest node on the right side of the node
-        if (rightDepth > leftDepth) {//compare the left and right sub branches
-            return rightDepth + 1;
+        int LeftDepth = getHeightHelper(Top->Left);//finding the deepest node on the left side of the node
+        int RightDepth = getHeightHelper(Top->Right);//finding the deepest node on the right side of the node
+        if (RightDepth > LeftDepth) {//compare the left and right sub branches
+            return RightDepth + 1;
         }
-        else {
-            return leftDepth + 1;//add one as it traverse the paths
-        }
+        return LeftDepth + 1;//add one as it traverse the paths
     }
 
     // Number of nodes in BST
@@ -221,56 +220,48 @@ public:
         if (Root == nullptr) {
             return 0;
         }
-        else if (Root->Left == nullptr && Root->Right == nullptr) {
+        if (Root->Left == nullptr && Root->Right == nullptr) {
             return 1;
         }
-        else {
-            return numberOfNodesHelper(Root);
-        }
+        return numberOfNodesHelper(Root);
     }
 
     int numberOfNodesHelper(Node* Leaf) {
         if (Leaf == nullptr) {
             return 0;
         }
-        else {
-            return 1 + numberOfNodesHelper(Leaf->Left) +
-                numberOfNodesHelper(Leaf->Right);
-        }
+        return 1 + numberOfNodesHelper(Leaf->Left) +
+            numberOfNodesHelper(Leaf->Right);
     }
 
     // add a new item, return true if successful
 
     bool add(const T &Item) {
-        Node* ptr = new Node;
-        if (ptr == nullptr) return false;            // out of memory
-        ptr->Data = Item;
-        ptr->Left = ptr->Right = nullptr;
+        auto Ptr = new Node;
+        if (Ptr == nullptr) return false;            // out of memory
+        Ptr->Data = Item;
+        Ptr->Left = Ptr->Right = nullptr;
 
         if (isEmpty()) {
-            Root = ptr;
+            Root = Ptr;
             return true;
         }
-        Node* Current = Root;
-        bool inserted = false;
-        while (!inserted) {
-            if (Current->Data.compare(ptr->Data) > 0) {
+        auto Current = Root;
+        bool Inserted = false;
+        while (!Inserted) {
+            if (Current->Data.compare(Ptr->Data) > 0) {
                 if (Current->Left == nullptr) {              // insert left
-                    Current->Left = ptr;
-                    inserted = true;
+                    Current->Left = Ptr;
+                    Inserted = true;
                 }
-                else {
-                    Current = Current->Left;
-                }
+                Current = Current->Left;
             }
             else {
                 if (Current->Right == nullptr) {
-                    Current->Right = ptr;
-                    inserted = true;
+                    Current->Right = Ptr;
+                    Inserted = true;
                 }
-                else {
-                    Current = Current->Right;
-                }
+                Current = Current->Right;
             }
         }
     }
@@ -279,15 +270,12 @@ public:
     bool remove(const T &Item) {
         if (contains(Item)) {
             removeNode(Item);
-            cout << "testing" << endl;
             return true;
         }
-        else {
             return false;
-        }
     }
     void removeNode(const T &Item) {
-        Node* Current = new Node();
+        auto Current = new Node();
         Current = Root;
         while (Current != nullptr) {
             if (Item.compare(Current->Data) < 0) {
@@ -298,187 +286,218 @@ public:
             }
             else if (Current->Data.compare(Item) == 0) {
                 if (Current->Left == nullptr && Current->Right == nullptr) {
-                    Node* tempPtr = new Node();
+                    auto tempPtr = new Node();
                     tempPtr = Current;
                     delete Current;
-                    cout << "testing" << endl;
                     Current = nullptr;
                 }
             }
         }
     }
 
-        // true if item is in BST
-        bool contains(const T &Item) const {
-            if (isEmpty()) {
-                return false;
-            }
-            else {
-                Node* Current = new Node();
-                Current = Root;
-                while (Current != nullptr) {
-                    if (Item.compare(Current->Data) < 0) {
-                        Current = Current->Left;
-                    }
-                    else if (Item.compare(Current->Data) > 0) {
-                        Current = Current->Right;
-                    }
-                    else if (Current->Data.compare(Item) == 0) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-
-        // inorder traversal: left-root-right
-        // takes a function that takes a single parameter of type T
-        void inOrderTraverse(void Visit(const T &Item)) const {
-            inOrderTraverseHelper(Visit, Root);
-        }
-        void inOrderTraverseHelper(void Visit(const T &Item), Node* treePtr) const {
-            if (treePtr != nullptr) {
-                inOrderTraverseHelper(Visit, treePtr->Left);
-                T theItem = treePtr->Data;
-                Visit(theItem);
-                inOrderTraverseHelper(Visit, treePtr->Right);
-            }
-        }
-
-
-        // preorder traversal: root-left-right
-        void preOrderTraverse(void Visit(const T &Item)) const {
-            preOrderTraverseHelper(Visit, Root);
-        }
-        void preOrderTraverseHelper(void Visit(const T &Item), Node* treePtr) const {
-            if (treePtr != nullptr) {
-                T theItem = treePtr->Data;
-                Visit(theItem);
-                preOrderTraverseHelper(Visit, treePtr->Left);
-                preOrderTraverseHelper(Visit, treePtr->Right);
-            }
-        }
-
-        // postorder traversal: left-right-root
-        void postOrderTraverse(void Visit(const T &Item)) const {
-            postOrderTraverseHelper(Visit, Root);
-        }
-        void postOrderTraverseHelper(void Visit(const T &Item), Node* treePtr) const {
-            if (treePtr != nullptr) {
-                postOrderTraverseHelper(Visit, treePtr->Left);
-                postOrderTraverseHelper(Visit, treePtr->Right);
-                T theItem = treePtr->Data;
-                Visit(theItem);
-            }
-        }
-        // create dynamic array, copy all the items to the array
-        // and then read the array to re-create this tree from scratch
-        // so that resulting tree is balanced
-        void rebalance() {
-            vector<Node*> vec;
-            rebalanceHelper(Root,vec);
-        }
-        void rebalanceHelper(Node* root, vector<Node*> vect0r) {
-            rebalanceHelper(root->Left, vect0r);
-            Node* tempPtr = new Node();
-            vect0r.push_back(tempPtr);
-            rebalanceHelper(root->Right, vect0r);
-        }
-
-        // delete all nodes in tree
-        void clear() {
-            clearHelper(Root);//delete each node in the tree
-            Root = nullptr;
-        }
-
-        //---------------------------------------------------------------------------
-        //Helper function for makeEmpty function
-        //Delete every node in the tree recursivly
-        //Also deletes pointer pointing at data, then the pointer itself
-        void clearHelper(Node*& ptr) {
-            if (ptr == nullptr) return;
-
-            /* first delete both subtrees */
-            clearHelper(ptr->Left);
-            clearHelper(ptr->Right);
-
-            delete ptr;
-        }
-        //---------------------------------------------------------------------------
-    //Assignment operator
-    //Creates a deep copy of a binary tree
-        BST& operator=(const BST<T> &Other) {
-            if (this == &Other) {//checks for self assignment
-                return *this;
-            }
-            clear();//empty out tree
-            equalHelper(Root, Other.Root);//deep copy of tree (other)
-            return *this;
-        }
-
-        //---------------------------------------------------------------------------
-        // Helper function for operation overloading =
-        //Will make a binary tree with same roots and subtrees
-
-        void equalHelper(Node* &Original, const Node* Other) {
-
-            if (Other == nullptr) {//base case for leafs
-                Original = nullptr;
-            }
-            else {
-                //must be preorder traversal
-                Node *temp = new Node();
-                temp->Data = Other->Data;
-
-                //add/set the node
-                Original = new Node();
-                Original->Data = temp->Data;
-                delete temp;
-                delete Original->Left;
-                delete Original->Right;
-                Original->Left = nullptr;
-                Original->Right = nullptr;
-                equalHelper(Original->Left, Other->Left);
-                equalHelper(Original->Right, Other->Right);
-            }
-        }
-        //---------------------------------------------------------------------------
-    //Equality
-    //Can only check between two binary trees
-    //Nothing gets changes in the two trees
-        bool operator==(const BST<T> &other) const {
-            return isEqualHelper(Root, other.Root);
-        }
-
-        //---------------------------------------------------------------------------
-        //Helper function for operation overloading == and !=
-        //Compare the two binary tree to see if they are identical
-        //Identical means the pointers of data contain same data, and the 
-        //exact same amount of data
-        bool isEqualHelper(const Node* first, const Node *second)const {
-            //compares if both Nodes are nullptr
-            if (first == nullptr && second == nullptr) {
-                return true;//base case for root and leaf nodes
-            }
-            //compare if both Node exist
-            if (first != nullptr && second != nullptr) {
-                if (first->Data.compare(second->Data) == 0) {//data must be equal
-                    //check the subtrees recursivly
-                    return ((isEqualHelper(first->Left, second->Left) &&
-                        (isEqualHelper(first->Right, second->Right))));
-                }
-                else {
-                    return false;
-                }
-            }
+    // true if item is in BST
+    bool contains(const T &Item) const {
+        if (isEmpty()) {
             return false;
         }
-
-
-        // not == to each other
-        bool operator!=(const BST<T> &Other) const {
-            return !(*this == Other);
+        Node* Current = new Node();
+        Current = Root;
+        while (Current != nullptr) {
+            if (Item.compare(Current->Data) < 0) {
+                Current = Current->Left;
+            }
+            else if (Item.compare(Current->Data) > 0) {
+                Current = Current->Right;
+            }
+            else if (Current->Data.compare(Item) == 0) {
+                return true;
+            }
         }
-    };
+        return false;
+    }
+
+    // inorder traversal: left-root-right
+    // takes a function that takes a single parameter of type T
+    void inOrderTraverse(void Visit(const T &Item)) const {
+        inOrderTraverseHelper(Visit, Root);
+    }
+    void inOrderTraverseHelper(void Visit(const T &Item), Node* NodePtr) const {
+        if (NodePtr != nullptr) {
+            inOrderTraverseHelper(Visit, NodePtr->Left);
+            T TheItem = NodePtr->Data;
+            Visit(TheItem);
+            inOrderTraverseHelper(Visit, NodePtr->Right);
+        }
+    }
+
+
+    // preorder traversal: root-left-right
+    void preOrderTraverse(void Visit(const T &Item)) const {
+        preOrderTraverseHelper(Visit, Root);
+    }
+    void preOrderTraverseHelper(void Visit(const T &Item), Node* NodePtr) const {
+        if (NodePtr != nullptr) {
+            T TheItem = NodePtr->Data;
+            Visit(TheItem);
+            preOrderTraverseHelper(Visit, NodePtr->Left);
+            preOrderTraverseHelper(Visit, NodePtr->Right);
+        }
+    }
+
+    // postorder traversal: left-right-root
+    void postOrderTraverse(void Visit(const T &Item)) const {
+        postOrderTraverseHelper(Visit, Root);
+    }
+    void postOrderTraverseHelper(void Visit(const T &Item), Node* NodePtr) const {
+        if (NodePtr != nullptr) {
+            postOrderTraverseHelper(Visit, NodePtr->Left);
+            postOrderTraverseHelper(Visit, NodePtr->Right);
+            T TheItem = NodePtr->Data;
+            Visit(TheItem);
+        }
+    }
+    // create dynamic array, copy all the items to the array
+    // and then read the array to re-create this tree from scratch
+    // so that resulting tree is balanced
+    void rebalance() {
+        // Store nodes of given BST in sorted order 
+        if (Root == nullptr || (Root->Left == nullptr && Root->Right == nullptr)) {
+            return;
+        }
+        T* Nodes;
+        storeBSTNodes(Nodes);
+        // Constructs BST from nodes[] 
+        int N = numberOfNodes();
+        Root = new Node();
+        Root = rebalanceHelper(Nodes, 0, N - 1);
+    }
+
+    Node* rebalanceHelper(T* InOrderArr, int Start, int End)
+    {
+        // base case 
+        if (Start > End) {
+            return nullptr;
+        }
+        int Mid = (Start + End) / 2;
+        auto Root = new Node();
+        Root->Data = InOrderArr[Mid];
+        Root->Left = rebalanceHelper(InOrderArr, Start, Mid - 1);
+        Root->Right = rebalanceHelper(InOrderArr, Mid + 1, End);
+        return Root;
+    }
+
+    void storeBSTNodes(T*& Nodes) {
+        Nodes = new T[numberOfNodes()];
+        stack<Node*> TempStack;
+        Node* Current = Root;
+        int Count = 0;
+        while (Current != nullptr || TempStack.empty() == false)
+        {
+            while (Current != nullptr)
+            {
+                TempStack.push(Current);
+                Current = Current->Left;
+            }
+            Current = TempStack.top();
+            TempStack.pop();
+            Nodes[Count] = Current->Data;
+            Count++;
+            Current = Current->Right;
+        }
+    }
+
+    // delete all nodes in tree
+    void clear() {
+        clearHelper(Root);//delete each node in the tree
+        Root = nullptr;
+    }
+
+    //---------------------------------------------------------------------------
+    //Helper function for makeEmpty function
+    //Delete every node in the tree recursivly
+    //Also deletes pointer pointing at data, then the pointer itself
+    void clearHelper(Node*& Ptr) {
+        if (Ptr == nullptr) return;
+
+        /* first delete both subtrees */
+        clearHelper(Ptr->Left);
+        clearHelper(Ptr->Right);
+
+        delete Ptr;
+    }
+    //---------------------------------------------------------------------------
+//Assignment operator
+//Creates a deep copy of a binary tree
+    BST& operator=(const BST<T> &Other) {
+        if (this == &Other) {//checks for self assignment
+            return *this;
+        }
+        clear();//empty out tree
+        equalHelper(Root, Other.Root);//deep copy of tree (other)
+        return *this;
+    }
+
+    //---------------------------------------------------------------------------
+    // Helper function for operation overloading =
+    //Will make a binary tree with same roots and subtrees
+
+    void equalHelper(Node* &Original, const Node* Other) {
+
+        if (Other == nullptr) {//base case for leafs
+            Original = nullptr;
+        }
+        else {
+            //must be preorder traversal
+            auto Temp = new Node();
+            Temp->Data = Other->Data;
+
+            //add/set the node
+            Original = new Node();
+            Original->Data = Temp->Data;
+            delete Temp;
+            delete Original->Left;
+            delete Original->Right;
+            Original->Left = nullptr;
+            Original->Right = nullptr;
+            equalHelper(Original->Left, Other->Left);
+            equalHelper(Original->Right, Other->Right);
+        }
+    }
+    //---------------------------------------------------------------------------
+//Equality
+//Can only check between two binary trees
+//Nothing gets changes in the two trees
+    bool operator==(const BST<T> &Other) const {
+        return isEqualHelper(Root, Other.Root);
+    }
+
+    //---------------------------------------------------------------------------
+    //Helper function for operation overloading == and !=
+    bool isEqualHelper(const Node* First, const Node *Second)const {
+        //compares if both Nodes are nullptr
+        if (First == nullptr && Second == nullptr) {
+            return true;//base case for root and leaf nodes
+        }
+        //compare if both Node exist
+        if (First != nullptr && Second != nullptr) {
+            if (First->Data.compare(Second->Data) == 0) {//data must be equal
+                //check the subtrees recursivly
+                return ((isEqualHelper(First->Left, Second->Left) &&
+                    (isEqualHelper(First->Right, Second->Right))));
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    // not == to each other
+    bool operator!=(const BST<T> &Other) const {
+        return !(*this == Other);
+    }
+};
 
 #endif  // BST_HPP
